@@ -8,7 +8,6 @@ const postSchema = new Schema({
     photoUrl: String,
     responses: Number,
     creationDate: Date,
-    comments: [{type: Schema.Types.ObjectId, ref: 'Comment'}],
     author: {type: Schema.Types.ObjectId, ref: 'User'}
 
 });

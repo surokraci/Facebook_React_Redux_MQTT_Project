@@ -1,31 +1,55 @@
 const express = require('express');
+
 const router = express.Router();
 
-const User = require('../models/Post');
+const Post = require('../models/Post');
+
 
 router.get('/', async (req, res) => {
+    Post.find()
+    .exec(function(error, postsX){
+    if(error){
+      return res.send(error)
+    }
     return res.send({
-        allUsers: []
-      });
+      posts: [...postsX]
+    })
+  })
 });
 
 router.post('/', async (req, res) => {
-    return res.send(req.body);
+    let newPost = new Post({
+        creationDate: new Date(),
+        ...req.body
+      })
+      await newPost.save()
+      return res.send(newPost)
 });
 
 router.put('/:id', async (req, res) => {
     const id = req.params.id;
-    return res.send({
-      putUserId: id
-    });
+    const updatePost = await Post.findByIdAndUpdate(
+    {_id: id},
+    { ...req.body},
+    {new: true}
+  )
+  return res.send(updatePost)
 });
 
 router.delete('/:id', async (req, res) => {
-  const id = req.params.id;
-  return res.send({
-    deletedUserId: id
+    const id = req.params.id
+    try{
+      Post.findByIdAndDelete(id, function(error, response){
+        if(error){
+          return res.send(error)
+        }
+        return res.send(id)
+      })
+    }catch(error){
+      return res.send(error)
+    }
   });
-});
+  
 
 
 

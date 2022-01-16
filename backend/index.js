@@ -1,11 +1,15 @@
 const express = require('express');
 const app = express();
 const users = require('./routes/users');
+const posts = require('./routes/posts');
+const comments = require('./routes/comments')
 
 app.use(express.json());
 
 
 app.use('/users', users);
+app.use('/posts', posts);
+app.use('/comments', comments)
 
 require('dotenv').config();
 const dbConnData = {
