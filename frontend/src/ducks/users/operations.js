@@ -18,8 +18,22 @@ export const getUsersList = () => {
 }
 
 export const loginUser = (data) => {
+    console.log(data);
     return async dispatch => {
-        dispatch(actions.UserLogin(data));
+        await dispatch(actions.UserLogin(data));
         console.log('Users Login');
+    }
+}
+
+export const addNewUser = (value) =>{
+    return async dispatch=>{
+        console.log('new user');
+        try{
+            const response = await axios.post('http://localhost:5000/users', value);
+            console.log(response);;
+            dispatch(actions.UserCreateNew(response.data))        
+        }catch(ex) {
+            console.log(ex);;
+        }
     }
 }

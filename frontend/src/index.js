@@ -9,6 +9,7 @@ import { Provider } from 'react-redux';
 import { Suspense } from 'react';
 import PostReducer from './ducks/posts/reducers';
 import UserReducer from './ducks/users/reducers';
+import { CookiesProvider } from "react-cookie";
 
 const store = createStore(
   combineReducers({
@@ -21,7 +22,9 @@ ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
     <Suspense fallback={<div>Ładowanie...</div>}>
+    <CookiesProvider>
     <App />
+    </CookiesProvider>
     </Suspense>
     </Provider>
   </React.StrictMode>,

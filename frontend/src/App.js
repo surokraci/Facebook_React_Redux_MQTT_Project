@@ -12,17 +12,29 @@ import Postlist from './ui/wall/postlist';
 import { connect } from "react-redux";
 import LoginForm from './ui/login/loginpage';
 import { getUsersList} from './ducks/users/operations'
+import { useCookies } from 'react-cookie';
+import {loginUser} from './ducks/users/operations'
+import { withRouter } from "react-router-dom";
 
 
 
 
-function App({getPostsList, getUsersList}) {
+function App({getPostsList, getUsersList, loginUser}) {
+
+  const [cookies, setCookie] = useCookies(['user']);
   useEffect(() => {
+    cookies.login && loginUser({
+      login: cookies.login,
+      password: cookies.password
+    })
     getPostsList()
     getUsersList()
     
     
-  }, []);
+    
+    
+  });
+ 
   
   
   return (
@@ -32,7 +44,7 @@ function App({getPostsList, getUsersList}) {
         <nav className='sidebar'>
           <ul>
             <li>
-              <Link to="/">Wall</Link>
+              <Link to="/wall">Wall</Link>
             </li>
           </ul>
         </nav>
@@ -43,7 +55,7 @@ function App({getPostsList, getUsersList}) {
           <Route path="/login">
             <LoginForm/>
           </Route>
-          <Route path="/">
+          <Route path="/wall">
             <Postlist/>
           </Route>
         </Switch>
@@ -54,9 +66,11 @@ function App({getPostsList, getUsersList}) {
   );
 }
 
+
 const mapDispatchToProps = {
   getPostsList,
-  getUsersList
+  getUsersList,
+  loginUser
 }
 
 export default connect(null, mapDispatchToProps)(App);
