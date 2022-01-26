@@ -16,7 +16,7 @@ const LoginForm = ({ loading, history, loginUser, users, logUSR, addNewUser},pro
     useEffect(()=>{
         if(users){
             if(logUSR.login !==''){
-                history.push('/wall')
+                history.push('/')
             }
         }
     }, )
@@ -36,7 +36,7 @@ const LoginForm = ({ loading, history, loginUser, users, logUSR, addNewUser},pro
                 console.log("zalogowano");
                 console.log(users);
                 loginUser(values);
-                history.push('/wall')
+                history.push('/')
             }
             else alert('Wrong login or password')
         }else{
@@ -53,12 +53,13 @@ const LoginForm = ({ loading, history, loginUser, users, logUSR, addNewUser},pro
             setCookie('login', values.login, { path: '/' })
             setCookie('password', values.password, { path: '/' })
             console.log("utworzono uzytkownika");
+            addNewUser(values)
             loginUser({
                 login: values.login,
                 password: values.password
             });
-            addNewUser(values)
-            history.push('/wall')
+            
+            history.push('/')
             
         }else{
             alert('User with this login already exists')
@@ -69,9 +70,15 @@ const LoginForm = ({ loading, history, loginUser, users, logUSR, addNewUser},pro
 
     return (
         <div>
-            {!loading ? <div>
+            <div className="navigation">
+            <h2 className="fbLogoNav"> facebook</h2>
+
+            </div>
+            {!loading ? 
+            <div className="LoginPage">
+                <div className="loginForm">
             <h3>Login to facebook</h3>
-            <div>
+            <div className="formLP">
             <Formik
                 initialValues={{
                     login: '',
@@ -85,7 +92,7 @@ const LoginForm = ({ loading, history, loginUser, users, logUSR, addNewUser},pro
                      <Form>
                      <Field name="login" placeholder="login"/>
                      {touched.login && errors.login && <div>{errors.login}</div>}
-                     <Field name="password" placeholder="password"/>
+                     <Field name="password" type='password' placeholder="password"/>
                      {touched.password && errors.password && <div>{errors.password}</div>}
 
                      
@@ -97,8 +104,10 @@ const LoginForm = ({ loading, history, loginUser, users, logUSR, addNewUser},pro
                     
                 </Formik>
                 </div>
-                <div>
+                </div>
+                <div className="registerForm">
                 <h3>New to facebook? Register now!</h3>
+            <div className="formLP">
             <Formik
                 initialValues={{
                     firstName: '',
@@ -144,7 +153,8 @@ const LoginForm = ({ loading, history, loginUser, users, logUSR, addNewUser},pro
                     
                 </Formik>
                 </div>
-            </div> : <div>loading</div>}
+                </div>
+            </div> : <div>loading...</div>}
             
         </div>
     )

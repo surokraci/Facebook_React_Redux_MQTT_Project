@@ -28,3 +28,8 @@ export const UserLogin = (user) => ({
     type: types.USER_LOGIN,
     payload: user
 })
+
+export const EditUser = (values) => ({
+    type: types.USER_EDIT,
+    payload: values
+}) 

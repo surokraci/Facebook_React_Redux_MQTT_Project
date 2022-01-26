@@ -15,11 +15,17 @@ import { getUsersList} from './ducks/users/operations'
 import { useCookies } from 'react-cookie';
 import {loginUser} from './ducks/users/operations'
 import { withRouter } from "react-router-dom";
+import UserDetail from './ui/user/userProfile';
+import UserEditForm from './ui/user/editProfile';
+import {getCommentsList} from './ducks/comments/operations'
+import { getLikesList } from './ducks/likes/operations';
+import PostEditForm from './ui/posts/postEdit';
+import ComEditForm from './ui/posts/comEdit';
 
 
 
 
-function App({getPostsList, getUsersList, loginUser}) {
+function App({getPostsList, getUsersList, loginUser, getCommentsList, getLikesList}) {
 
   const [cookies, setCookie] = useCookies(['user']);
   useEffect(() => {
@@ -29,6 +35,8 @@ function App({getPostsList, getUsersList, loginUser}) {
     })
     getPostsList()
     getUsersList()
+    getCommentsList()
+    getLikesList()
     
     
     
@@ -41,21 +49,27 @@ function App({getPostsList, getUsersList, loginUser}) {
     <div>
       <Router>
       <div >
-        <nav className='sidebar'>
-          <ul>
-            <li>
-              <Link to="/wall">Wall</Link>
-            </li>
-          </ul>
-        </nav>
+        
 
         {/* A <Switch> looks through its children <Route>s and
             renders the first one that matches the current URL. */}
         <Switch>
+        <Route path="/comments/:id/edit">
+            <ComEditForm/>
+          </Route>
+        <Route path="/posts/:id/edit">
+            <PostEditForm/>
+          </Route>
+        <Route path="/users/:login/edit">
+            <UserEditForm/>
+          </Route>
+        <Route path="/users/:login">
+            <UserDetail/>
+          </Route>
           <Route path="/login">
             <LoginForm/>
           </Route>
-          <Route path="/wall">
+          <Route path="/">
             <Postlist/>
           </Route>
         </Switch>
@@ -70,7 +84,10 @@ function App({getPostsList, getUsersList, loginUser}) {
 const mapDispatchToProps = {
   getPostsList,
   getUsersList,
-  loginUser
+  loginUser,
+  getCommentsList,
+  getLikesList
+  
 }
 
 export default connect(null, mapDispatchToProps)(App);

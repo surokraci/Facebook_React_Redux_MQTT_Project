@@ -4,6 +4,7 @@ const USER_LIST_REQUEST_FAIL = 'USER_LIST_REQUEST_FAIL'
 const USER_CREATE = 'USER_CREATE'
 const USER_DELETE = 'USER_DELETE'
 const USER_LOGIN = 'USER_LOGIN'
+const USER_EDIT = 'USER_EDIT'
 
 
 const types = {
@@ -12,7 +13,8 @@ const types = {
     USER_LIST_REQUEST_FAIL,
     USER_CREATE,
     USER_DELETE,
-    USER_LOGIN
+    USER_LOGIN,
+    USER_EDIT
     
 };
 

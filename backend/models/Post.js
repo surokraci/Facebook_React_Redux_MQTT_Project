@@ -8,7 +8,7 @@ const postSchema = new Schema({
     photoUrl: String,
     responses: Number,
     creationDate: Date,
-    author: {type: Schema.Types.ObjectId, ref: 'User'}
+    author: String
 
 });
 

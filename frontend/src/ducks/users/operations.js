@@ -37,3 +37,29 @@ export const addNewUser = (value) =>{
         }
     }
 }
+
+export const editUser = (value) =>{
+    return async dispatch=>{
+        console.log('edit user');
+        try{
+            const response = await axios.put(`http://localhost:5000/users/${value._id}`, value);
+            console.log(response);;
+            dispatch(actions.EditUser(response.data))        
+        }catch(ex) {
+            console.log(ex);;
+        }
+    }
+}
+
+export const DeleteUser = (value) =>{
+    return async dispatch=>{
+        console.log('delete user');
+        try{
+            const response = await axios.delete(`http://localhost:5000/users/${value}`);
+            console.log(response);;
+            dispatch(actions.UserDeleteOne(response.data))        
+        }catch(ex) {
+            console.log(ex);;
+        }
+    }
+}

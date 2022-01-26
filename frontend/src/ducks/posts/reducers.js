@@ -18,6 +18,9 @@ const PostReducer = (state = initState, action) => {
             return {...state, posts: [...state.posts, action.payload]}
         case types.POST_DELETE:
             return {...state, posts: state.posts.filter(el=>el._id !== action.payload)}
+        case types.POST_EDIT:
+            console.log(action.payload);
+            return {state, posts: state.posts.map(function(item){return item._id === action.payload._id ? {...item, text: action.payload.text, photoUrl: action.payload.photoUrl}:{...item}})}
         default:
             return state;
     }

@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 
 const User = require('../models/User');
+const Post = require('../models/Post');
+const Comment = require('../models/Comment');
 
 router.get('/', async (req, res) => {
   User.find()
@@ -39,12 +41,22 @@ router.put('/:id', async (req, res) => {
 router.delete('/:id', async (req, res) => {
   const id = req.params.id
   try{
-    User.findByIdAndDelete(id, function(error, response){
+    await User.deleteOne({login: id}, function(error, response){
       if(error){
         return res.send(error)
       }
-      return res.send(id)
     })
+    await Post.deleteMany({author: id}, function(error){
+      if(error){
+        return res.send(error)
+      }
+    })
+    await Comment.deleteMany({author: id}, function(error){
+      if(error){
+        return res.send(error)
+      }
+    })
+    return res.send(id)
   }catch(error){
     return res.send(error)
   }

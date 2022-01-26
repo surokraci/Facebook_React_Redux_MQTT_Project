@@ -1,0 +1,603 @@
+body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+      'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+      sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    .profileDown{
+        display: grid;
+        grid-template-columns: 5% 30% 65%;
+        .profileInformations{
+            grid-column-start: 2;
+            background-color: whitesmoke;
+            margin: 10px;
+            margin-top: 40px;
+            height: 300px;
+            padding: 20px;
+            border: none;
+            border-radius: 13px;
+            display: flex;
+            align-content: space-around;
+            flex-direction: column;
+            justify-content: space-evenly;
+            div{
+                font-size: 20px;
+                font-size: 400;
+            }
+        }
+        .profilePosts{
+            grid-column-start: 3;
+            margin: 10px;
+            margin-top: 20px;
+            .postList{
+            
+                width: 130%;
+                .postFrame{
+                    border-radius: 13px;
+                    width: 60%;
+                    min-height: 250px;
+                    margin: 20px;
+                    background-color: whitesmoke;
+                    position: relative;
+                    .properComments{
+                        position: relative;
+                        .properCom{
+                            border: none;
+                            margin: 10px;
+                            background-color: rgb(235, 235, 235);
+                            border-radius: 10px;
+                            position: relative;
+                            img{
+                                width: 40px;
+                                height: 40px;
+                                border: 0px solid black;
+                                border-radius: 50%;
+                                margin: 10px;
+                                background-image: url('https://preview.redd.it/h5gnz1ji36o61.png?width=225&format=png&auto=webp&s=84379f8d3bbe593a2e863c438cd03e84c8a474fa');
+                                background-size: 50px;
+                                background-position: 50% 50%;
+                            }
+                            .comname{
+                                position: absolute;
+                                left: 60px;
+                                top: 20px;
+                                font-size: 18px;
+                                font-weight: 400;
+                            }
+                            .comtxt{
+                                padding: 10px;
+                                padding-bottom: 20px;
+                                font-weight: 400;
+                            }
+                            .combutton{
+                                position: absolute;
+                                top: 10px;
+                                right: 10px;
+                                button{
+                                    background-color: white;
+                                    border: none;
+                                    color: darkblue;
+                                    padding: 6px 15px;
+                                    text-align: center;
+                                    text-decoration: none;
+                                    transition-duration: 0.6s;
+                                    font-weight: 500;
+                                    border-radius: 4px;
+                                    margin-left: 5px;
+                                    &:hover{
+                                        background-color: red;
+                                        color: white;
+                            }
+                                }
+                            }
+    
+                        }
+                    }
+                    .textField{
+                        margin: 15px;
+                        margin-top: 5px;
+                        font-size: 25px;
+                        font-weight: 400;
+                    }
+                    .postResponses{
+                        position: relative;
+                        left: 15px;
+                        top: 35px
+                    }
+                    .likebuttons{
+                        margin: 10px;
+                        position: relative;
+                        left: 50px;
+                        button{
+                            background-color: white;
+                            border: none;
+                            color: darkblue;
+                            padding: 8px 15px;
+                            text-align: center;
+                            text-decoration: none;
+                            transition-duration: 0.6s;
+                            font-weight: 500;
+                            border-radius: 4px;
+                            margin-left: 5px;
+                            &:hover{
+                                background-color: darkblue;
+                                color: white;
+                    }
+                        }
+                    }
+                    .commentField{
+                        position: relative;
+                        bottom: 10px;
+                        
+                        width: 100%;
+                        Form{
+                            width: 100%;
+                            margin: 10px;
+                            input{
+                                width: 80%;
+                                padding: 8px 20px;
+                                margin: 8px 0;
+                                box-sizing: border-box;
+                                border-radius: 10px;
+                            }
+                            button{
+                                background-color: white;
+                                border: none;
+                                color: darkblue;
+                                padding: 8px 15px;
+                                text-align: center;
+                                text-decoration: none;
+                                transition-duration: 0.6s;
+                                font-weight: 500;
+                                border-radius: 4px;
+                                margin-left: 5px;
+                                &:hover{
+                                    background-color: darkblue;
+                                    color: white;
+                    }
+                            }
+                        }
+                    }
+                    .userInfo{
+                        
+                        position: relative;
+                        img{
+                            background-image: url('https://preview.redd.it/h5gnz1ji36o61.png?width=225&format=png&auto=webp&s=84379f8d3bbe593a2e863c438cd03e84c8a474fa');
+                            background-size: 70px;
+                            background-position: 50% 50%;
+                            width: 60px;
+                            height: 60px;
+                            border: 0px solid black;
+                            border-radius: 50%;
+                            margin: 10px
+        
+                        }
+                        .userNamePost{
+                            position: absolute;
+                            top: 15px;
+                            left: 80px;
+                            font-size: 20px;
+                            font-weight: 500;
+                        }
+                        .PostCreationDate{
+                            position: absolute;
+                            left: 80px;
+                            top: 40px
+                        }
+                        .buttonpost{
+                            position: absolute;
+                            top: 10px;
+                            right: 10px;
+                            button{
+                                background-color: white;
+                                border: none;
+                                color: darkblue;
+                                padding: 5px 10px;
+                                text-align: center;
+                                text-decoration: none;
+                                transition-duration: 0.6s;
+                                font-weight: 500;
+                                border-radius: 4px;
+                                &:hover{
+                                    background-color: red;
+                                    color: white;
+                    }
+    
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    .profileContainer{
+        background-image: linear-gradient(grey, darkgrey);
+        height: 220px;
+        position: relative;
+        img{
+            background-image: url('https://preview.redd.it/h5gnz1ji36o61.png?width=225&format=png&auto=webp&s=84379f8d3bbe593a2e863c438cd03e84c8a474fa');
+            background-size: 230px;
+            background-position: 50% 50%;
+            width: 190px;
+            height: 190px;
+            border: 0px solid black;
+            border-radius: 50%;
+            position: absolute;
+            left: 30px;
+            bottom: 10px;
+        }
+        .userNameProfile{
+            position: absolute;
+            left: 230px;
+            font-size: 45px;
+            color: white;
+            font-weight: 500;
+            bottom: 10px;
+        }
+        button{
+            background-color: white;
+            border: none;
+            color: darkblue;
+            text-align: center;
+            text-decoration: none;
+            transition-duration: 0.6s;
+            font-weight: 300;
+            font-size: 15px;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            border-radius: 4px;
+            padding: 3px 10px;
+            &:hover{
+                background-color: darkblue;
+                color: white;
+            }
+        }
+    }
+    .LoginPage{
+        display: grid;
+        grid-template-columns: 10% 35% 45% 10%;
+        .loginForm{
+            grid-column-start: 2;
+            
+            h3{
+                margin-left: 20px;
+            }
+            Form{
+                display: flex;
+                flex-direction: column;
+                margin: 20px;
+                button{
+                    background-color: darkblue;
+                    border: none;
+                    color: white;
+                    text-align: center;
+                    text-decoration: none;
+                    transition-duration: 0.6s;
+                    font-weight: 500;
+                    font-size: medium;
+                }
+            }
+        }
+        .registerForm{
+            grid-column-start: 3;
+            h3{
+                margin-left: 20px;
+            }
+            Form{
+                display: flex;
+                flex-direction: column;
+                margin: 20px;
+                button{
+                    background-color: darkblue;
+                    border: none;
+                    color: white;
+                    text-align: center;
+                    text-decoration: none;
+                    transition-duration: 0.6s;
+                    font-weight: 500;
+                    font-size: medium;
+                }
+            }
+
+        }
+    }
+    .postPage{
+        display: flex;
+        flex-direction: row;
+        
+        .usersList{
+            width: 300px;
+            div{
+                padding: 20px;
+                border: 1px solid lightgray;
+                border-width: 0px 1px 1px 1px;
+                &:hover{
+                    background-color: lightgrey;
+                };
+            }
+        }
+        .postList{
+            
+            width: 100%;
+            .newpostform{
+                margin: 10px;
+                position: relative;
+                Form{
+                    width: 65%;
+                    margin: 10px;
+                    input{
+                        width: 80%;
+                        padding: 8px 20px;
+                        margin: 8px 0;
+                        box-sizing: border-box;
+                        border-radius: 10px;
+                    }
+                    button{
+                        border: 1px solid darkblue;
+                        position: absolute;
+                        font-size: 20px;
+                        margin: 10px;
+                        width: 8%;
+                        top: 1px;
+                        background-color: white;
+                        color: darkblue;
+                        padding: 15px 15px;
+                        text-align: center;
+                        text-decoration: none;
+                        transition-duration: 0.6s;
+                        font-weight: 500;
+                        border-radius: 4px;
+                        margin-left: 5px;
+                        &:hover{
+                            background-color: darkblue;
+                            color: white;
+            }
+                    }
+
+            }}
+            .postFrame{
+                border-radius: 13px;
+                width: 60%;
+                min-height: 250px;
+                margin: 20px;
+                background-color: whitesmoke;
+                position: relative;
+                .properComments{
+                    position: relative;
+                    .properCom{
+                        border: none;
+                        margin: 10px;
+                        background-color: rgb(235, 235, 235);
+                        border-radius: 10px;
+                        position: relative;
+                        img{
+                            width: 40px;
+                            height: 40px;
+                            border: 0px solid black;
+                            border-radius: 50%;
+                            margin: 10px;
+                            background-image: url('https://preview.redd.it/h5gnz1ji36o61.png?width=225&format=png&auto=webp&s=84379f8d3bbe593a2e863c438cd03e84c8a474fa');
+                            background-size: 50px;
+                            background-position: 50% 50%;
+                        }
+                        .comname{
+                            position: absolute;
+                            left: 60px;
+                            top: 20px;
+                            font-size: 18px;
+                            font-weight: 400;
+                        }
+                        .comtxt{
+                            padding: 10px;
+                            padding-bottom: 20px;
+                            font-weight: 400;
+                        }
+                        .combutton{
+                            position: absolute;
+                            top: 10px;
+                            right: 10px;
+                            button{
+                                background-color: white;
+                                border: none;
+                                color: darkblue;
+                                padding: 6px 15px;
+                                text-align: center;
+                                text-decoration: none;
+                                transition-duration: 0.6s;
+                                font-weight: 500;
+                                border-radius: 4px;
+                                margin-left: 5px;
+                                &:hover{
+                                    background-color: red;
+                                    color: white;
+                        }
+                            }
+                        }
+
+                    }
+                }
+                .textField{
+                    margin: 15px;
+                    margin-top: 5px;
+                    font-size: 25px;
+                    font-weight: 400;
+                }
+                .postResponses{
+                    position: relative;
+                    left: 15px;
+                    top: 35px
+                }
+                .likebuttons{
+                    margin: 10px;
+                    position: relative;
+                    left: 50px;
+                    button{
+                        background-color: white;
+                        border: none;
+                        color: darkblue;
+                        padding: 8px 15px;
+                        text-align: center;
+                        text-decoration: none;
+                        transition-duration: 0.6s;
+                        font-weight: 500;
+                        border-radius: 4px;
+                        margin-left: 5px;
+                        &:hover{
+                            background-color: darkblue;
+                            color: white;
+                }
+                    }
+                }
+                .commentField{
+                    position: relative;
+                    bottom: 10px;
+                    
+                    width: 100%;
+                    Form{
+                        width: 100%;
+                        margin: 10px;
+                        input{
+                            width: 80%;
+                            padding: 8px 20px;
+                            margin: 8px 0;
+                            box-sizing: border-box;
+                            border-radius: 10px;
+                        }
+                        button{
+                            background-color: white;
+                            border: none;
+                            color: darkblue;
+                            padding: 8px 15px;
+                            text-align: center;
+                            text-decoration: none;
+                            transition-duration: 0.6s;
+                            font-weight: 500;
+                            border-radius: 4px;
+                            margin-left: 5px;
+                            &:hover{
+                                background-color: darkblue;
+                                color: white;
+                }
+                        }
+                    }
+                }
+                .userInfo{
+                    
+                    position: relative;
+                    img{
+                        background-image: url('https://preview.redd.it/h5gnz1ji36o61.png?width=225&format=png&auto=webp&s=84379f8d3bbe593a2e863c438cd03e84c8a474fa');
+                        background-size: 70px;
+                        background-position: 50% 50%;
+                        width: 60px;
+                        height: 60px;
+                        border: 0px solid black;
+                        border-radius: 50%;
+                        margin: 10px
+    
+                    }
+                    .userNamePost{
+                        position: absolute;
+                        top: 15px;
+                        left: 80px;
+                        font-size: 20px;
+                        font-weight: 500;
+                    }
+                    .PostCreationDate{
+                        position: absolute;
+                        left: 80px;
+                        top: 40px
+                    }
+                    .buttonpost{
+                        position: absolute;
+                        top: 10px;
+                        right: 10px;
+                        button{
+                            background-color: white;
+                            border: none;
+                            color: darkblue;
+                            padding: 5px 10px;
+                            text-align: center;
+                            text-decoration: none;
+                            transition-duration: 0.6s;
+                            font-weight: 500;
+                            border-radius: 4px;
+                            &:hover{
+                                background-color: red;
+                                color: white;
+                }
+
+                        }
+                    }
+                }
+            }
+        }
+
+    }
+    
+    .navigation{
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        background-color: darkblue;
+        color: white;
+        align-items: center;
+        height: 60px;
+        .fbLogoNav{
+            margin-left: 20px;
+        }
+        .navTools{
+            display: flex;
+            margin-right: 20px;
+            align-items: center;
+            img{
+                margin-right: 10px;
+                background-image: url('https://preview.redd.it/h5gnz1ji36o61.png?width=225&format=png&auto=webp&s=84379f8d3bbe593a2e863c438cd03e84c8a474fa');
+                background-size: 40px;
+                background-position: 50% 50%;
+                width: 30px;
+                height: 30px;
+                border: none;
+                border-radius: 50px;
+
+            }
+            button{
+                background-color: white;
+                border: none;
+                color: darkblue;
+                padding: 5px 10px;
+                text-align: center;
+                text-decoration: none;
+                transition-duration: 0.6s;
+                font-weight: 500;
+                border-radius: 4px;
+                &:hover{
+                    background-color: red;
+                    color: white;
+                }
+                
+            }
+            .userNameNav{
+                margin-right: 20px;
+                color: white;
+                
+                &:link{
+                    color: white;
+                    background-color: green;
+                };
+                &:visited {
+                    color: white;
+                };
+                &:hover{
+                    color: white
+                };
+                &:active {
+                    color: white;
+                  }
+
+            }
+        }
+        
+    }
+  }

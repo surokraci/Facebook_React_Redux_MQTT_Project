@@ -19,6 +19,10 @@ const UserReducer = (state = initState, action) => {
             return {...state, users: [...state.users, action.payload]}
         case types.USER_LOGIN:
             return {state, logged: {login: action.payload.login, password: action.payload.password}}
+        case types.USER_EDIT:
+            return {state, users: state.users.map(function(item){return item._id === action.payload._id ? {...item, password: action.payload.password, firstName: action.payload.firstName, lastName: action.payload.lastName, gender: action.payload.gender, dateOfBirth: action.payload.dateOfBirth, profilePicture: action.payload.profilePicture}:{...item}})}
+        case types.USER_DELETE:
+            return {...state, users: state.users.filter(el=>el.login !== action.payload)}
         default:
             return state;
     }

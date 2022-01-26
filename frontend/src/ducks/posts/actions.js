@@ -23,3 +23,13 @@ export const PostDeleteOne = (post) => ({
     type: types.POST_DELETE,
     payload: post
 })
+
+export const LikesCreate = (post) => ({
+    type: types.LIKES_CREATE,
+    payload: post
+})
+
+export const EditPost2 = (values) => ({
+    type: types.POST_EDIT,
+    payload: values
+}) 

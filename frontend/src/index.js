@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
+import './index.scss';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
@@ -10,11 +10,15 @@ import { Suspense } from 'react';
 import PostReducer from './ducks/posts/reducers';
 import UserReducer from './ducks/users/reducers';
 import { CookiesProvider } from "react-cookie";
+import CommentReducer from './ducks/comments/reducers';
+import LikesReducer from './ducks/likes/reducers';
 
 const store = createStore(
   combineReducers({
     posts: PostReducer,
-    users: UserReducer
+    users: UserReducer,
+    comments: CommentReducer,
+    likes: LikesReducer
   }), applyMiddleware(thunk)
 )
 

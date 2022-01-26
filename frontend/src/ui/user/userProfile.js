@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { connect } from "react-redux";
-import { Link } from "react-router-dom";
 import { withRouter } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useCookies } from 'react-cookie';
 import { loginUser } from "../../ducks/users/operations";
 import { getUsersList } from "../../ducks/users/operations";
@@ -11,7 +11,8 @@ import { addNewComment, DeleteComment } from "../../ducks/comments/operations";
 import { getLikesList, LikeMinus, LikePlus } from "../../ducks/likes/operations";
 
 
-const PostList = ({ history, posts, loading, users, logUSR, loginUser,usersloading, getUsersList, addNewPost, comments, addNewComment, DeleteComment, DeletePost, likes, getLikesList, LikeMinus, LikePlus} ,props) => {
+
+const UserDetail = ({history, user, users, logUSR, posts, loginUser, getUsersList, addNewComment, DeletePost, DeleteComment, getLikesList, LikeMinus, LikePlus, likes,comments},props)=>{
     useEffect(()=>{
         cookies.login && loginUser({
             login: cookies.login,
@@ -21,23 +22,11 @@ const PostList = ({ history, posts, loading, users, logUSR, loginUser,usersloadi
         getUsersList()
         
         
-        if(users){
-            if(logUSR.login == ''){
-                history.push('/login')
-            }
-        }
     }, [])
+    const [cookies, setCookie] = useCookies(['user']);
+    const userPosts = []
 
-
-    const handleNewPost = (values, resetForm) => {
-        console.log();
-        addNewPost(values)
-        resetForm({values:''})
-        console.log(likes);
-
-        
-    }
-
+    
     const handleNewComment = (values, resetForm) => {
         console.log(comments);
         addNewComment(values);
@@ -46,81 +35,52 @@ const PostList = ({ history, posts, loading, users, logUSR, loginUser,usersloadi
         
     }
     
-
-    
-
-    const [cookies, setCookie] = useCookies(['user']);
-
-    const handleLogout = () => {
-        setCookie('login', '', { path: '/' })
-        setCookie('password', '', { path: '/' })
-        loginUser({login:'', password:''});
-        history.push('/login')
-        window.location.reload(false);
+    if(user && posts){
         
+    for(const x of posts){
+        if(x.author===user.login){
+            userPosts.push(x)
+        }
+    }
     }
 
+    
     return (
         <div>
             <div className="navigation">
-            <h2 className="fbLogoNav"> facebook</h2>
-            <div className="navTools">
-                <img src={logUSR.login != '' && users ? users.find(x=>x.login == logUSR.login).profilePicture:''}  alt=''></img>
-                <div className="userNameNav">{logUSR.login != '' && users ? <Link to={`users/${logUSR.login}`}  style={{ textDecoration: 'none', color:'white' }}>{users.find(x=>x.login == logUSR.login).firstName} {users.find(x=>x.login == logUSR.login).lastName}</Link>:<span>x</span>}</div>
-                <button onClick={() => handleLogout()}>
-                    Log Out
-                    </button>
-            </div>
-
-            </div>
+            <Link to={'/'} style={{ textDecoration: 'none', color:'white' }}><h2 className="fbLogoNav"> facebook</h2></Link>
             
-            {!users ?
-                <div>Trwa ładowanie</div>
-                :
-                <div className="postPage">
-                    <div className="usersList">
-                        {users.map(x=>{
-                            return(
-                                <div key={x.login}>
-                                    <Link to={`users/${x.login}`} style={{ textDecoration: 'none', color:'black'}} >{x.firstName} {x.lastName}</Link>
-                                </div>
-                                
-                            )
-                        })}
-
+            </div>
+            {user && logUSR && likes && posts?
+                
+                <div>
+                    <div className="profileContainer">
+                        
+                        <div className="userNameProfile">{user.firstName} {user.lastName}</div>
+                        <img src={user.profilePicture} alt=''></img>
+                        <div>
+                            {user.login === logUSR.login ?
+                            <Link to={`/users/${user.login}/edit`}>
+                            <button>
+                                Edit Profile
+                            </button>
+                            </Link>
+                            
+                            : <span></span>}
+                        </div>
+                        
                     </div>
                     
-                    <div className="postList">
-                        <div className="newpostform">
-                    <Formik
-                initialValues={{
-                    text: '',
-                    photoUrl: '',
-                    responses: 0,
-                    author: logUSR.login
-
-                }}
-                onSubmit={(values, {resetForm}) => handleNewPost(values, resetForm)}
-                
-                
-                >
-                 {({ errors, touched }) =>(
-                     <Form>
-                     <Field name="text" placeholder="Create new post!"/>
-                     {touched.text && errors.text && <div>{errors.text}</div>}
-                     <Field name="photoUrl" placeholder="Photo Url (optional)"/>
-                     {touched.photoUrl && errors.photoUrl && <div>{errors.photoUrl}</div>}
-
-                     
-                     <button type="submit">
-                         Publish Post
-                     </button>
-                    </Form>
-                 )}
-                    
-                </Formik>
-                    </div>
-                    {posts.slice(0).reverse().map(c=> {
+                    <div className="profileDown">
+                        <div className="profileInformations">
+                            <div>Gender: {user.gender}</div>
+                            <div>User of facebook from: {user.registrationDate.slice(0,10)}</div>
+                            <div>Birthday: {user.dateOfBirth.slice(0,10)}</div>
+                        </div>
+                        <div className="profilePosts">
+                        <div className="postList">
+                        
+                    {userPosts.slice(0).reverse().map(c=> {
                     let ProperComments = comments.filter(x=>x.post == c._id)
                     
                     
@@ -130,6 +90,16 @@ const PostList = ({ history, posts, loading, users, logUSR, loginUser,usersloadi
                             <img src={users.find(x=>x.login == c.author).profilePicture}  alt=''></img>
                             <div className="userNamePost">{users.find(x=>x.login == c.author).firstName} {users.find(x=>x.login == c.author).lastName}</div>
                             <div className="PostCreationDate">{c.creationDate.slice(0,10)}</div>
+                            <div className="buttonpost2">
+                                        {logUSR.login === c.author ?
+                                        <Link to={`/posts/${c._id}/edit/`}>
+                                            <button>
+                                            Edit Post
+                                            </button>
+                                            </Link>
+                                        : <span></span>}
+                                    </div>
+                            
                             <div className="buttonpost">
                                         {logUSR.login === c.author ?
                                             <button onClick={()=>DeletePost(c._id)}>
@@ -185,6 +155,15 @@ const PostList = ({ history, posts, loading, users, logUSR, loginUser,usersloadi
                                     <img src={users.find(u=>u.login == x.author).profilePicture}  alt=''></img>
                                     <div className="comname">{users.find(u=>u.login === x.author).firstName} {users.find(u=>u.login === x.author).lastName}</div>
                                     <div className="comtxt">{x.text}</div>
+                                    <div className="combutton2">
+                                        {logUSR.login === x.author ?
+                                        <Link to={`/comments/${x._id}/edit/`}>
+                                            <button>
+                                            Edit Comment
+                                            </button>
+                                            </Link>
+                                        : <span></span>}
+                                    </div>
                                     <div className="combutton">
                                         {logUSR.login === x.author ?
                                             <button onClick={()=>DeleteComment(x._id)}>
@@ -208,29 +187,35 @@ const PostList = ({ history, posts, loading, users, logUSR, loginUser,usersloadi
                     )
                     })}
                     </div>
-                </div>
-                
-                
-                
+                        </div>
                     
-                
-            }
+                    
+                    
             
+                </div>
 
-        </div>    
+
+            
+                </div>
+            
+            :
+            <div>Loading</div>
+                }
+            
+        </div>
     )
-};
-const mapStateToProps = (state) => {
-    return {
-        posts: state.posts.posts,
-        loading: state.posts.loading,
-        users: state.users.users ? state.users.users: null,
-        logUSR: state.users.logged,
-        usersloading: state.users.loading,
-        comments: state.comments.comments,
-        likes: state.likes.likes
-    };
+
 }
+
+const mapStateToProps = (state, props) => ({
+    user: state.users.users ? state.users.users.find(x=> x.login === props.match.params.login) : null,
+    users: state.users.users,
+    posts: state.posts.posts,
+    logUSR: state.users.logged,
+    comments: state.comments.comments,
+    likes: state.likes.likes
+    
+});
 const mapDispatchToProps = {
     loginUser,
     getUsersList,
@@ -241,6 +226,7 @@ const mapDispatchToProps = {
     getLikesList,
     LikeMinus,
     LikePlus
+
 }
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(PostList));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(UserDetail));

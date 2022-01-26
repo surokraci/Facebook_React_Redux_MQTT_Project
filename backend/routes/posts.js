@@ -1,4 +1,6 @@
 const express = require('express');
+const Comment = require('../models/Comment');
+const Like = require('../models/Like');
 
 const router = express.Router();
 
@@ -22,8 +24,14 @@ router.post('/', async (req, res) => {
         creationDate: new Date(),
         ...req.body
       })
+    let newLikes = new Like({
+        post: newPost._id,
+        authors: []
+
+    })
       await newPost.save()
-      return res.send(newPost)
+      await newLikes.save()
+      return res.send({newPost,newLikes})
 });
 
 router.put('/:id', async (req, res) => {
@@ -39,12 +47,23 @@ router.put('/:id', async (req, res) => {
 router.delete('/:id', async (req, res) => {
     const id = req.params.id
     try{
-      Post.findByIdAndDelete(id, function(error, response){
+      await Post.findByIdAndDelete(id, function(error, response){
         if(error){
           return res.send(error)
         }
-        return res.send(id)
+        
       })
+      await Comment.deleteMany({post: id}, function(error){
+        if(error){
+          return res.send(error)
+        }
+      })
+      await Like.deleteMany({post: id}, function(error){
+        if(error){
+          return res.send(error)
+        }
+      })
+      return res.send(id)
     }catch(error){
       return res.send(error)
     }
