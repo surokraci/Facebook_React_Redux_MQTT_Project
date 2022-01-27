@@ -6,15 +6,18 @@ import { useCookies } from 'react-cookie';
 import { loginUser } from "../../ducks/users/operations";
 import { getUsersList } from "../../ducks/users/operations";
 import { ErrorMessage, Field, Form, Formik } from "formik"
-import { addNewPost, DeletePost,addNewMQTTPost, addNewMQTTLikes } from "../../ducks/posts/operations";
-import { addNewComment, DeleteComment } from "../../ducks/comments/operations";
-import { getLikesList, LikeMinus, LikePlus } from "../../ducks/likes/operations";
+import { addNewPost, DeletePost,addNewMQTTPost, addNewMQTTLikes, DeleteMQTTPost, EditMQTTPost } from "../../ducks/posts/operations";
+import { addNewComment, DeleteComment, addNewMQTTCom, DeleteMQTTCom } from "../../ducks/comments/operations";
+import { getLikesList, LikeMinus, LikePlus, thumbMQTTDown, thumbMQTTUp } from "../../ducks/likes/operations";
 import {client,connectStatus,mqttConnect,mqttDisconnect,mqttUnSub,mqttSub,mqttPublish} from '../../mqtt/mqtt.js';
+import { addNewMQTTUser } from "../../ducks/users/operations";
+import { addMessage } from "../../ducks/messenger/actions";
 
 
 
 
-const UserDetail = ({history, user, users, logUSR, posts, loginUser, getUsersList, addNewComment, DeletePost, DeleteComment, getLikesList, LikeMinus, LikePlus, likes,comments, addNewMQTTPost, addNewMQTTLikes},props)=>{
+const UserDetail = ({history, user, users, logUSR, posts, loginUser, getUsersList, addNewComment, DeletePost, DeleteComment, getLikesList, LikeMinus, LikePlus, likes,comments, addNewMQTTPost, addNewMQTTLikes,DeleteMQTTPost,EditMQTTPost, addNewMQTTUser,
+    addMessage, addNewMQTTCom, DeleteMQTTCom, thumbMQTTUp, thumbMQTTDown},props)=>{
     useEffect(()=>{
         cookies.login && loginUser({
             login: cookies.login,
@@ -57,6 +60,38 @@ const UserDetail = ({history, user, users, logUSR, posts, loginUser, getUsersLis
                         const msg2 = JSON.parse(message)
                         addNewMQTTPost(msg2)
                         break;
+                    case 'newPost/delete':
+                        const msg3 = JSON.parse(message)
+                        DeleteMQTTPost(msg3)
+                        break
+                    case 'newPost/edit':
+                        const msg4 = JSON.parse(message)
+                        EditMQTTPost(msg4)
+                        break
+                    case 'newUserX/create':
+                        const msg5 = JSON.parse(message)
+                        addNewMQTTUser(msg5)
+                        break
+                    case 'messenger/new':
+                        const msg6 = JSON.parse(message)
+                        addMessage(msg6)
+                        break
+                    case 'newComment/com':
+                        const msg7 = JSON.parse(message)
+                        addNewMQTTCom(msg7)
+                        break
+                    case 'newComment/del':
+                        const msg8 = JSON.parse(message)
+                        DeleteMQTTCom(msg8)
+                        break
+                    case 'newLike/plus':
+                        const msg9 = JSON.parse(message)
+                        thumbMQTTUp(msg9)
+                        break
+                    case 'newLike/minus':
+                        const msg10 = JSON.parse(message)
+                        thumbMQTTDown(msg10)
+                        break
                     
                     default:
                         break;
@@ -72,6 +107,14 @@ const UserDetail = ({history, user, users, logUSR, posts, loginUser, getUsersLis
             subscribe(`poke/${logUSR.login}`);
             subscribe(`newPost/likes`);
             subscribe(`newPost/post`);
+            subscribe(`newPost/delete`);
+            subscribe(`newPost/edit`);
+            subscribe('newUserX/create');
+            subscribe('messenger/new');
+            subscribe('newComment/com');
+            subscribe('newComment/del');
+            subscribe('newLike/plus');
+            subscribe('newLike/minus')
             }
         },[connStatus])
     
@@ -281,6 +324,14 @@ const mapDispatchToProps = {
     LikePlus,
     addNewMQTTPost,
     addNewMQTTLikes,
+    DeleteMQTTPost,
+    EditMQTTPost,
+    addNewMQTTUser,
+    addMessage,
+    addNewMQTTCom,
+    DeleteMQTTCom,
+    thumbMQTTUp,
+    thumbMQTTDown
 
 }
 

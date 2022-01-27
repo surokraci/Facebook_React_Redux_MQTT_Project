@@ -7,8 +7,8 @@ import { loginUser } from "../../ducks/users/operations";
 import { getUsersList } from "../../ducks/users/operations";
 import { ErrorMessage, Field, Form, Formik } from "formik"
 import { addNewPost, DeletePost, addNewMQTTPost, addNewMQTTLikes,DeleteMQTTPost,EditMQTTPost } from "../../ducks/posts/operations";
-import { addNewComment, DeleteComment } from "../../ducks/comments/operations";
-import { getLikesList, LikeMinus, LikePlus } from "../../ducks/likes/operations";
+import { addNewComment, DeleteComment, addNewMQTTCom, DeleteMQTTCom } from "../../ducks/comments/operations";
+import { getLikesList, LikeMinus, LikePlus, thumbMQTTUp, thumbMQTTDown } from "../../ducks/likes/operations";
 import {client,connectStatus,mqttConnect,mqttDisconnect,mqttUnSub,mqttSub,mqttPublish} from '../../mqtt/mqtt.js';
 import { addNewMQTTUser } from "../../ducks/users/operations";
 import { addMessage } from "../../ducks/messenger/actions";
@@ -16,7 +16,7 @@ import { addMessage } from "../../ducks/messenger/actions";
 
 const PostList = ({ history, posts, loading, users, logUSR, loginUser,usersloading, getUsersList, addNewPost, comments, addNewComment,
     DeleteComment, DeletePost, likes, getLikesList, LikeMinus, LikePlus, addNewMQTTLikes, addNewMQTTPost,DeleteMQTTPost,EditMQTTPost, addNewMQTTUser,
-    messenger,addMessage} ,props) => {
+    messenger,addMessage, addNewMQTTCom, DeleteMQTTCom, thumbMQTTUp, thumbMQTTDown} ,props) => {
     useEffect(()=>{
         cookies.login && loginUser({
             login: cookies.login,
@@ -84,7 +84,22 @@ const PostList = ({ history, posts, loading, users, logUSR, loginUser,usersloadi
                         const msg6 = JSON.parse(message)
                         addMessage(msg6)
                         break
-                    
+                    case 'newComment/com':
+                        const msg7 = JSON.parse(message)
+                        addNewMQTTCom(msg7)
+                        break
+                    case 'newComment/del':
+                        const msg8 = JSON.parse(message)
+                        DeleteMQTTCom(msg8)
+                        break
+                    case 'newLike/plus':
+                        const msg9 = JSON.parse(message)
+                        thumbMQTTUp(msg9)
+                        break
+                    case 'newLike/minus':
+                        const msg10 = JSON.parse(message)
+                        thumbMQTTDown(msg10)
+                        break
                     default:
                         break;
               }
@@ -108,7 +123,11 @@ const PostList = ({ history, posts, loading, users, logUSR, loginUser,usersloadi
         subscribe(`newPost/delete`);
         subscribe(`newPost/edit`);
         subscribe('newUserX/create');
-        subscribe('messenger/new')
+        subscribe('messenger/new');
+        subscribe('newComment/com');
+        subscribe('newComment/del');
+        subscribe('newLike/plus');
+        subscribe('newLike/minus')
         }
     },[connStatus])
 
@@ -136,7 +155,7 @@ const PostList = ({ history, posts, loading, users, logUSR, loginUser,usersloadi
 
     const handlePoke = (login, fn, ln)=>{
         console.log('poke');
-        publish({"topic":`poke/${login}`,"payload":`You was poked by ${fn} ${ln}`})
+        publish({"topic":`poke/${login}`,"payload":`You were poked by ${fn} ${ln}`})
 
     }
 
@@ -398,7 +417,11 @@ const mapDispatchToProps = {
     DeleteMQTTPost,
     EditMQTTPost,
     addNewMQTTUser,
-    addMessage
+    addMessage,
+    addNewMQTTCom,
+    DeleteMQTTCom,
+    thumbMQTTUp,
+    thumbMQTTDown
     
 }
 

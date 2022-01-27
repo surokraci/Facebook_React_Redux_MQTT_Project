@@ -1,5 +1,11 @@
 import axios from "axios";
 import * as actions from './actions';
+import {client,connectStatus,mqttConnect,mqttDisconnect,mqttUnSub,mqttSub,mqttPublish} from '../../mqtt/mqtt.js';
+const record = {topic:"default",qos: 2};
+const connect = () => {mqttConnect(`ws://broker.emqx.io:8083/mqtt`)};
+const publish = (payload) => {mqttPublish({...record,...payload})};
+const subscribe = (topic)=>{mqttSub({...record,"topic":topic});console.log('sub')};
+const unsubscribe = (topic)=>{mqttUnSub({...record,"topic":topic});console.log('unsub');};
 
 export const getCommentsList = () => {
     return async dispatch => {
@@ -22,7 +28,10 @@ export const addNewComment = (value) =>{
         try{
             const response = await axios.post('http://localhost:5000/comments', value);
             console.log(response);;
-            dispatch(actions.CommentCreateNew(response.data))        
+            dispatch(actions.CommentCreateNew(response.data))
+            unsubscribe(`newComment/com`);
+            publish({"topic":`newComment/com`,"payload":JSON.stringify(response.data)})
+            subscribe(`newComment/com`);       
         }catch(ex) {
             console.log(ex);;
         }
@@ -35,7 +44,10 @@ export const DeleteComment = (value) =>{
         try{
             const response = await axios.delete(`http://localhost:5000/comments/${value}`);
             console.log(response);;
-            dispatch(actions.CommentDeleteOne(response.data))        
+            dispatch(actions.CommentDeleteOne(response.data))
+            unsubscribe(`newComment/del`);
+            publish({"topic":`newComment/del`,"payload":JSON.stringify(response.data)})
+            subscribe(`newComment/del`);               
         }catch(ex) {
             console.log(ex);;
         }
@@ -52,5 +64,17 @@ export const editCom = (value) =>{
         }catch(ex) {
             console.log(ex);;
         }
+    }
+}
+
+export const addNewMQTTCom = (com) =>{
+    return async dispatch=>{
+        dispatch(actions.CommentCreateNew(com))
+    }
+}
+
+export const DeleteMQTTCom = (com) =>{
+    return async dispatch=>{
+        dispatch(actions.CommentDeleteOne(com))
     }
 }

@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { withRouter } from "react-router-dom";
 import React, { useState } from 'react';
 import { useCookies } from 'react-cookie';
+import sha1 from "js-sha1"
 
 import * as Yup from 'yup';
 import { loginUser, addNewUser } from "../../ducks/users/operations";
@@ -42,7 +43,7 @@ const LoginForm = ({ loading, history, loginUser, users, logUSR, addNewUser},pro
         if(loggedUser){
             if(loggedUser.password == values.password){
                 setCookie('login', values.login, { path: '/' })
-                setCookie('password', values.password, { path: '/' })
+                setCookie('password', sha1(values.password), { path: '/' })
                 console.log("zalogowano");
                 console.log(users);
                 loginUser(values);
@@ -62,7 +63,7 @@ const LoginForm = ({ loading, history, loginUser, users, logUSR, addNewUser},pro
         const loggedUser = users.find(el=>el.login == values.login)
         if(!loggedUser){
             setCookie('login', values.login, { path: '/' })
-            setCookie('password', values.password, { path: '/' })
+            setCookie('password', sha1(values.password), { path: '/' })
             console.log("utworzono uzytkownika");
             addNewUser(values)
             loginUser({
