@@ -56,7 +56,8 @@ const UserDetail = ({history, user, users, logUSR, posts, loginUser, getUsersLis
                     case 'newPost/post':
                         const msg2 = JSON.parse(message)
                         addNewMQTTPost(msg2)
-                        break
+                        break;
+                    
                     default:
                         break;
               }

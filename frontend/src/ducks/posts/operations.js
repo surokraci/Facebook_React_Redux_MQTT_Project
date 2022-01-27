@@ -51,7 +51,10 @@ export const DeletePost = (value) =>{
         try{
             const response = await axios.delete(`http://localhost:5000/posts/${value}`);
             console.log(response);;
-            dispatch(actions.PostDeleteOne(response.data))        
+            dispatch(actions.PostDeleteOne(response.data))
+            unsubscribe(`newPost/delete`);
+            publish({"topic":`newPost/delete`,"payload":JSON.stringify(response.data)})
+            subscribe(`newPost/delete`);
         }catch(ex) {
             console.log(ex);;
         }
@@ -73,14 +76,18 @@ export const editPost = (value) =>{
 
 export const addNewMQTTPost = (post) =>{
     return async dispatch=>{
-        console.log('new post');
         dispatch(actions.PostCreateNew(post))
     }
 }
 
 export const addNewMQTTLikes = (likes) =>{
     return async dispatch=>{
-        console.log('new post');
         dispatch(actions.LikesCreate(likes))
+    }
+}
+
+export const DeleteMQTTPost = (data) =>{
+    return async dispatch=>{
+        dispatch(actions.PostDeleteOne(data))
     }
 }

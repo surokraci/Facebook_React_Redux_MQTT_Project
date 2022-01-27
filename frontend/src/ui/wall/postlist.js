@@ -6,14 +6,14 @@ import { useCookies } from 'react-cookie';
 import { loginUser } from "../../ducks/users/operations";
 import { getUsersList } from "../../ducks/users/operations";
 import { ErrorMessage, Field, Form, Formik } from "formik"
-import { addNewPost, DeletePost, addNewMQTTPost, addNewMQTTLikes } from "../../ducks/posts/operations";
+import { addNewPost, DeletePost, addNewMQTTPost, addNewMQTTLikes,DeleteMQTTPost } from "../../ducks/posts/operations";
 import { addNewComment, DeleteComment } from "../../ducks/comments/operations";
 import { getLikesList, LikeMinus, LikePlus } from "../../ducks/likes/operations";
 import {client,connectStatus,mqttConnect,mqttDisconnect,mqttUnSub,mqttSub,mqttPublish} from '../../mqtt/mqtt.js';
 
 
 
-const PostList = ({ history, posts, loading, users, logUSR, loginUser,usersloading, getUsersList, addNewPost, comments, addNewComment, DeleteComment, DeletePost, likes, getLikesList, LikeMinus, LikePlus, addNewMQTTLikes, addNewMQTTPost} ,props) => {
+const PostList = ({ history, posts, loading, users, logUSR, loginUser,usersloading, getUsersList, addNewPost, comments, addNewComment, DeleteComment, DeletePost, likes, getLikesList, LikeMinus, LikePlus, addNewMQTTLikes, addNewMQTTPost,DeleteMQTTPost} ,props) => {
     useEffect(()=>{
         cookies.login && loginUser({
             login: cookies.login,
@@ -64,6 +64,10 @@ const PostList = ({ history, posts, loading, users, logUSR, loginUser,usersloadi
                     case 'newPost/post':
                         const msg2 = JSON.parse(message)
                         addNewMQTTPost(msg2)
+                        break;
+                    case 'newPost/delete':
+                        const msg3 = JSON.parse(message)
+                        DeleteMQTTPost(msg3)
                         break
                     default:
                         break;
@@ -85,6 +89,7 @@ const PostList = ({ history, posts, loading, users, logUSR, loginUser,usersloadi
         subscribe(`poke/${logUSR.login}`);
         subscribe(`newPost/likes`);
         subscribe(`newPost/post`);
+        subscribe(`newPost/delete`);
         }
     },[connStatus])
 
@@ -322,7 +327,8 @@ const mapDispatchToProps = {
     LikeMinus,
     LikePlus,
     addNewMQTTLikes,
-    addNewMQTTPost
+    addNewMQTTPost,
+    DeleteMQTTPost
 }
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(PostList));
