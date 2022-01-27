@@ -5,6 +5,9 @@ body {
       sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    button{
+        box-shadow: 0px 0px 3px black;
+    }
     .editForm{
         display: grid;
         grid-template-columns: 10% 50% 10%;
@@ -38,6 +41,7 @@ body {
         display: grid;
         grid-template-columns: 5% 30% 65%;
         .profileInformations{
+            box-shadow: 0px 0px 5px black;
             grid-column-start: 2;
             background-color: whitesmoke;
             margin: 10px;
@@ -63,15 +67,18 @@ body {
             
                 width: 130%;
                 .postFrame{
+                    box-shadow: 0px 0px 5px black;
                     border-radius: 13px;
                     width: 60%;
                     min-height: 250px;
                     margin: 20px;
                     background-color: whitesmoke;
                     position: relative;
+                    padding-bottom: 10px;
                     .properComments{
                         position: relative;
                         .properCom{
+                            box-shadow: 0px 0px 5px black;
                             border: none;
                             margin: 10px;
                             background-color: rgb(235, 235, 235);
@@ -286,6 +293,7 @@ body {
         }
     }
     .profileContainer{
+        box-shadow: 0px 0px 5px black;
         background-image: linear-gradient(grey, darkgrey);
         height: 220px;
         position: relative;
@@ -381,38 +389,125 @@ body {
         display: flex;
         flex-direction: row;
         .usersList{
-            width: 350px;
+            width: 22%;
+            box-shadow: 0px 0px 5px black;
             div{
+                height: 25px;
+                display: flex;
+                justify-content: space-between;
                 padding: 20px;
+                
                 border: 1px solid lightgray;
                 border-width: 0px 1px 1px 1px;
                 &:hover{
                     background-color: lightgrey;
                 };
+                button{
+                    background-color: white;
+                    border: none;
+                    color: darkblue;
+                    padding: 4px 10px;
+                    text-align: center;
+                    text-decoration: none;
+                    transition-duration: 0.6s;
+                    font-weight: 500;
+                    border-radius: 4px;
+                    &:hover{
+                        background-color: green;
+                        color: white;
+            }
+                }
+            }
+        }
+        .messenger{
+            background-color: whitesmoke;
+            width: 28%;
+            box-shadow: 0px 0px 5px black;
+            .messengerField{
+                margin: 15px;
+                Form{
+                    input{
+                        width: 65%;
+                        padding: 8px 20px;
+                        box-shadow: inset 0px 0px 3px black;
+                        border-radius: 10px;
+                    }
+                    button{
+                        background-color: white;
+                        border: none;
+                        color: darkblue;
+                        padding: 6px 15px;
+                        text-align: center;
+                        text-decoration: none;
+                        transition-duration: 0.6s;
+                        font-weight: 500;
+                        border-radius: 4px;
+                        margin-left: 5px;
+                        &:hover{
+                            background-color: blue;
+                            color: white;
+                }
+                    }
+
+                }
+            }
+            .messengerlist{
+                position: relative;
+                .message{
+                    background-color: white;
+                    border: none;
+                    box-shadow: inset 0px 0px 5px black;
+                    border-radius: 8px;
+                    margin: 15px;
+                    padding: 20px;
+                    position: relative;
+                    .mesname{
+                        position: absolute;
+                        left: 70px;
+                        top: 30px;
+                        font-weight: 500;
+                    };
+                    .mestxt{
+                        margin-top: 10px
+                    };
+                    img{
+                        width: 40px;
+                        height: 40px;
+                        border: 0px solid black;
+                        border-radius: 50%;
+                        background-image: url('https://preview.redd.it/h5gnz1ji36o61.png?width=225&format=png&auto=webp&s=84379f8d3bbe593a2e863c438cd03e84c8a474fa');
+                        background-size: 46px;
+                        background-position: 50% 50%;
+                    }
+                }
+                
+
             }
         }
         .postList{
             
-            width: 100%;
+            width: 60%;
             .newpostform{
                 margin: 10px;
                 position: relative;
                 Form{
-                    width: 65%;
+                    width: 100%;
                     margin: 10px;
                     input{
-                        width: 80%;
+                        
+                        width: 79%;
                         padding: 8px 20px;
                         margin: 8px 0;
                         box-sizing: border-box;
                         border-radius: 10px;
                     }
                     button{
+                        box-shadow: 0px 0px 2px black;
                         border: 1px solid darkblue;
                         position: absolute;
                         font-size: 20px;
                         margin: 10px;
-                        width: 8%;
+                        width: 12%;
                         top: 1px;
                         background-color: white;
                         color: darkblue;
@@ -431,15 +526,18 @@ body {
 
             }}
             .postFrame{
+                box-shadow: 0px 0px 5px black;
                 border-radius: 13px;
-                width: 60%;
+                width: 90%;
                 min-height: 250px;
                 margin: 20px;
                 background-color: whitesmoke;
                 position: relative;
+                padding-bottom: 10px;
                 .properComments{
                     position: relative;
                     .properCom{
+                        box-shadow: 0px 0px 5px black;
                         border: none;
                         margin: 10px;
                         background-color: rgb(235, 235, 235);
@@ -498,7 +596,7 @@ body {
                     font-weight: 400;
                 }
                 .photoinpost{
-                    width: 694px;
+                    max-width: 100%;
                 }
                 .postResponses{
                     position: relative;
@@ -613,6 +711,7 @@ body {
     }
     
     .navigation{
+        box-shadow: 0px 0px 5px black;
         display: flex;
         flex-direction: row;
         justify-content: space-between;

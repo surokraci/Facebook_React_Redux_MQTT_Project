@@ -67,7 +67,10 @@ export const editPost = (value) =>{
         try{
             const response = await axios.put(`http://localhost:5000/posts/${value._id}`, value);
             console.log(response);
-            dispatch(actions.EditPost2(response.data))        
+            dispatch(actions.EditPost2(response.data))
+            unsubscribe(`newPost/edit`);
+            publish({"topic":`newPost/edit`,"payload":JSON.stringify(response.data)})
+            subscribe(`newPost/edit`);        
         }catch(ex) {
             console.log(ex);;
         }
@@ -89,5 +92,12 @@ export const addNewMQTTLikes = (likes) =>{
 export const DeleteMQTTPost = (data) =>{
     return async dispatch=>{
         dispatch(actions.PostDeleteOne(data))
+    }
+}
+
+export const EditMQTTPost = (data) =>{
+    console.log('edytowano');
+    return async dispatch=>{
+        dispatch(actions.EditPost2(data))
     }
 }

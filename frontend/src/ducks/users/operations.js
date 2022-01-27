@@ -1,5 +1,11 @@
 import axios from "axios";
 import * as actions from './actions';
+import {client,connectStatus,mqttConnect,mqttDisconnect,mqttUnSub,mqttSub,mqttPublish} from '../../mqtt/mqtt.js';
+const record = {topic:"default",qos: 0};
+const connect = () => {mqttConnect(`ws://broker.emqx.io:8083/mqtt`)};
+const publish = (payload) => {mqttPublish({...record,...payload}); console.log('publishUser');};
+const subscribe = (topic)=>{mqttSub({...record,"topic":topic});console.log('sub')};
+const unsubscribe = (topic)=>{mqttUnSub({...record,"topic":topic});console.log('unsub');};
 
 export const getUsersList = () => {
     return async dispatch => {
@@ -30,8 +36,12 @@ export const addNewUser = (value) =>{
         console.log('new user');
         try{
             const response = await axios.post('http://localhost:5000/users', value);
-            console.log(response);;
-            dispatch(actions.UserCreateNew(response.data))        
+            console.log(response);
+            unsubscribe(`newUserX/create`);
+            publish({"topic":`newUserX/create`,"payload":JSON.stringify(response.data)})
+            subscribe(`newUserX/create`);   
+            dispatch(actions.UserCreateNew(response.data))
+             
         }catch(ex) {
             console.log(ex);;
         }
@@ -63,3 +73,10 @@ export const DeleteUser = (value) =>{
         }
     }
 }
+
+export const addNewMQTTUser = (user) =>{
+    return async dispatch=>{
+        dispatch(actions.UserCreateNew(user))
+    }
+}
+

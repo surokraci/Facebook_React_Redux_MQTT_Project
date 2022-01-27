@@ -6,14 +6,17 @@ import { useCookies } from 'react-cookie';
 import { loginUser } from "../../ducks/users/operations";
 import { getUsersList } from "../../ducks/users/operations";
 import { ErrorMessage, Field, Form, Formik } from "formik"
-import { addNewPost, DeletePost, addNewMQTTPost, addNewMQTTLikes,DeleteMQTTPost } from "../../ducks/posts/operations";
+import { addNewPost, DeletePost, addNewMQTTPost, addNewMQTTLikes,DeleteMQTTPost,EditMQTTPost } from "../../ducks/posts/operations";
 import { addNewComment, DeleteComment } from "../../ducks/comments/operations";
 import { getLikesList, LikeMinus, LikePlus } from "../../ducks/likes/operations";
 import {client,connectStatus,mqttConnect,mqttDisconnect,mqttUnSub,mqttSub,mqttPublish} from '../../mqtt/mqtt.js';
+import { addNewMQTTUser } from "../../ducks/users/operations";
+import { addMessage } from "../../ducks/messenger/actions";
 
 
-
-const PostList = ({ history, posts, loading, users, logUSR, loginUser,usersloading, getUsersList, addNewPost, comments, addNewComment, DeleteComment, DeletePost, likes, getLikesList, LikeMinus, LikePlus, addNewMQTTLikes, addNewMQTTPost,DeleteMQTTPost} ,props) => {
+const PostList = ({ history, posts, loading, users, logUSR, loginUser,usersloading, getUsersList, addNewPost, comments, addNewComment,
+    DeleteComment, DeletePost, likes, getLikesList, LikeMinus, LikePlus, addNewMQTTLikes, addNewMQTTPost,DeleteMQTTPost,EditMQTTPost, addNewMQTTUser,
+    messenger,addMessage} ,props) => {
     useEffect(()=>{
         cookies.login && loginUser({
             login: cookies.login,
@@ -69,6 +72,19 @@ const PostList = ({ history, posts, loading, users, logUSR, loginUser,usersloadi
                         const msg3 = JSON.parse(message)
                         DeleteMQTTPost(msg3)
                         break
+                    case 'newPost/edit':
+                        const msg4 = JSON.parse(message)
+                        EditMQTTPost(msg4)
+                        break
+                    case 'newUserX/create':
+                        const msg5 = JSON.parse(message)
+                        addNewMQTTUser(msg5)
+                        break
+                    case 'messenger/new':
+                        const msg6 = JSON.parse(message)
+                        addMessage(msg6)
+                        break
+                    
                     default:
                         break;
               }
@@ -90,6 +106,9 @@ const PostList = ({ history, posts, loading, users, logUSR, loginUser,usersloadi
         subscribe(`newPost/likes`);
         subscribe(`newPost/post`);
         subscribe(`newPost/delete`);
+        subscribe(`newPost/edit`);
+        subscribe('newUserX/create');
+        subscribe('messenger/new')
         }
     },[connStatus])
 
@@ -118,6 +137,12 @@ const PostList = ({ history, posts, loading, users, logUSR, loginUser,usersloadi
     const handlePoke = (login, fn, ln)=>{
         console.log('poke');
         publish({"topic":`poke/${login}`,"payload":`You was poked by ${fn} ${ln}`})
+
+    }
+
+    const handleMessenger = (values, resetForm)=>{
+        publish({"topic":`messenger/new`,"payload":JSON.stringify(values)})
+        resetForm({values: ''})
 
     }
     
@@ -293,6 +318,47 @@ const PostList = ({ history, posts, loading, users, logUSR, loginUser,usersloadi
                     )
                     })}
                     </div>
+                    <div className="messenger">
+                    
+                    <div className="messengerField">
+                            <Formik
+                                initialValues={{
+                                    text: '',
+                                    author: logUSR.login
+
+                                }}
+                                onSubmit={(values, {resetForm}) => handleMessenger(values, resetForm)}
+                                enableReinitialize={true}
+                                
+                                >
+                                {({ errors, touched }) =>(
+                                    <Form>
+                                    <Field name="text" placeholder="New message!"/>
+                                    {touched.text && errors.text && <div>{errors.text}</div>}
+
+                                    
+                                    <button type="submit" >
+                                        Send
+                                    </button>
+                                    </Form>
+                                )}
+                                    
+                                </Formik>
+                            </div>
+                            <div className="messengerlist">{messenger.slice(0).reverse().map(x=>{
+                                return (<div className='message' key={x._id}>
+                                    <img src={users.find(u=>u.login == x.author).profilePicture}  alt=''></img>
+                                    <div className="mesname">{users.find(u=>u.login === x.author).firstName} {users.find(u=>u.login === x.author).lastName}</div>
+                                    <div className="mestxt">{x.text}</div>
+                                    
+                                    
+                                    
+                                </div>
+
+                                )
+                                
+                            })} </div>
+                    </div>
                 </div>
                 
                 
@@ -313,7 +379,8 @@ const mapStateToProps = (state) => {
         logUSR: state.users.logged,
         usersloading: state.users.loading,
         comments: state.comments.comments,
-        likes: state.likes.likes
+        likes: state.likes.likes,
+        messenger: state.messenger
     };
 }
 const mapDispatchToProps = {
@@ -328,7 +395,11 @@ const mapDispatchToProps = {
     LikePlus,
     addNewMQTTLikes,
     addNewMQTTPost,
-    DeleteMQTTPost
+    DeleteMQTTPost,
+    EditMQTTPost,
+    addNewMQTTUser,
+    addMessage
+    
 }
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(PostList));

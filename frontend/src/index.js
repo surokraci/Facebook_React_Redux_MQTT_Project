@@ -12,13 +12,15 @@ import UserReducer from './ducks/users/reducers';
 import { CookiesProvider } from "react-cookie";
 import CommentReducer from './ducks/comments/reducers';
 import LikesReducer from './ducks/likes/reducers';
+import messengerReducer from './ducks/messenger/reducers';
 
 const store = createStore(
   combineReducers({
     posts: PostReducer,
     users: UserReducer,
     comments: CommentReducer,
-    likes: LikesReducer
+    likes: LikesReducer,
+    messenger: messengerReducer
   }), applyMiddleware(thunk)
 )
 
