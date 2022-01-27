@@ -5,6 +5,35 @@ body {
       sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    .editForm{
+        display: grid;
+        grid-template-columns: 10% 50% 10%;
+        div{
+            grid-column-start: 2;
+            width: 100%;
+            
+            h3{
+                margin-left: 20px;
+            }
+            Form{
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+                margin: 20px;
+                button{
+                    background-color: darkblue;
+                    border: none;
+                    color: white;
+                    text-align: center;
+                    text-decoration: none;
+                    transition-duration: 0.6s;
+                    font-weight: 500;
+                    font-size: medium;
+                }
+            }
+        }
+
+    }
     .profileDown{
         display: grid;
         grid-template-columns: 5% 30% 65%;
@@ -70,6 +99,27 @@ body {
                                 padding-bottom: 20px;
                                 font-weight: 400;
                             }
+                            .combutton2{
+                                position: absolute;
+                                top: 10px;
+                                right: 80px;
+                                button{
+                                    background-color: white;
+                                    border: none;
+                                    color: darkblue;
+                                    padding: 6px 15px;
+                                    text-align: center;
+                                    text-decoration: none;
+                                    transition-duration: 0.6s;
+                                    font-weight: 500;
+                                    border-radius: 4px;
+                                    margin-left: 5px;
+                                    &:hover{
+                                        background-color: darkblue;
+                                        color: white;
+                            }
+                                }
+                            }
                             .combutton{
                                 position: absolute;
                                 top: 10px;
@@ -99,6 +149,9 @@ body {
                         margin-top: 5px;
                         font-size: 25px;
                         font-weight: 400;
+                    }
+                    .photoinpost{
+                        width: 714px;
                     }
                     .postResponses{
                         position: relative;
@@ -184,6 +237,27 @@ body {
                             position: absolute;
                             left: 80px;
                             top: 40px
+                        }
+                        .buttonpost2{
+                            position: absolute;
+                            top: 10px;
+                            right: 100px;
+                            button{
+                                background-color: white;
+                                border: none;
+                                color: darkblue;
+                                padding: 5px 10px;
+                                text-align: center;
+                                text-decoration: none;
+                                transition-duration: 0.6s;
+                                font-weight: 500;
+                                border-radius: 4px;
+                                &:hover{
+                                    background-color: darkblue;
+                                    color: white;
+                    }
+    
+                            }
                         }
                         .buttonpost{
                             position: absolute;
@@ -306,9 +380,8 @@ body {
     .postPage{
         display: flex;
         flex-direction: row;
-        
         .usersList{
-            width: 300px;
+            width: 350px;
             div{
                 padding: 20px;
                 border: 1px solid lightgray;
@@ -423,6 +496,9 @@ body {
                     margin-top: 5px;
                     font-size: 25px;
                     font-weight: 400;
+                }
+                .photoinpost{
+                    width: 694px;
                 }
                 .postResponses{
                     position: relative;

@@ -46,9 +46,9 @@ const UserEditForm = ({ history, user, logUSR, editUser, DeleteUser, loginUser},
     }
 
     return (
-        <div>
+        <div className="editForm">
             {user ?
-            <div>
+            <div >
                 <h3>Edit User Informations</h3>
             <Formik
                 initialValues={{

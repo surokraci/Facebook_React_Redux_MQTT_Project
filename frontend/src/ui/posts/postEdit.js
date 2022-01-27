@@ -34,7 +34,7 @@ const PostEditForm = ({ history, post, logUSR, editPost,},props) => {
     }
 
     return (
-        <div>
+        <div className="editForm">
             {post ?
             <div>
                 <h3>Edit User Post</h3>

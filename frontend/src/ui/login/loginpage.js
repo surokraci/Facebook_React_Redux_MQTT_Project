@@ -7,12 +7,14 @@ import { useCookies } from 'react-cookie';
 
 import * as Yup from 'yup';
 import { loginUser, addNewUser } from "../../ducks/users/operations";
+import {client,connectStatus,mqttConnect,mqttDisconnect,mqttUnSub,mqttSub,mqttPublish} from '../../mqtt/mqtt.js';
 
 
 
 
 
 const LoginForm = ({ loading, history, loginUser, users, logUSR, addNewUser},props) => {
+    
     useEffect(()=>{
         if(users){
             if(logUSR.login !==''){
@@ -21,10 +23,18 @@ const LoginForm = ({ loading, history, loginUser, users, logUSR, addNewUser},pro
         }
     }, )
 
+    
    
     
 
     const [cookies, setCookie] = useCookies(['user']);
+    const record = {topic:"default",qos: 0};
+    const connect = () => {mqttConnect(`ws://broker.emqx.io:8083/mqtt`)};
+    const publish = (payload) => {mqttPublish({...record,...payload})};
+    const subscribe = (topic)=>{mqttSub({...record,"topic":topic})};
+    const unsubscribe = (topic)=>{mqttUnSub({...record,"topic":topic})};
+    const disconnect = () => {mqttDisconnect()};
+    useEffect(()=>{disconnect();connect()},[])
 
     const handleSubmit = (values) => {
         console.log('ok');
@@ -36,7 +46,8 @@ const LoginForm = ({ loading, history, loginUser, users, logUSR, addNewUser},pro
                 console.log("zalogowano");
                 console.log(users);
                 loginUser(values);
-                history.push('/')
+                history.push('/');
+                window.location.reload(false);
             }
             else alert('Wrong login or password')
         }else{

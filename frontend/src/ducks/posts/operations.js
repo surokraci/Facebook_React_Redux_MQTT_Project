@@ -1,5 +1,11 @@
 import axios from "axios";
 import * as actions from './actions';
+import {client,connectStatus,mqttConnect,mqttDisconnect,mqttUnSub,mqttSub,mqttPublish} from '../../mqtt/mqtt.js';
+const record = {topic:"default",qos: 2};
+const connect = () => {mqttConnect(`ws://broker.emqx.io:8083/mqtt`)};
+const publish = (payload) => {mqttPublish({...record,...payload})};
+const subscribe = (topic)=>{mqttSub({...record,"topic":topic});console.log('sub')};
+const unsubscribe = (topic)=>{mqttUnSub({...record,"topic":topic});console.log('unsub');};
 
 export const getPostsList = () => {
     return async dispatch => {
@@ -24,6 +30,13 @@ export const addNewPost = (value) =>{
             console.log(response);;
             await dispatch(actions.LikesCreate(response.data.newLikes))
             dispatch(actions.PostCreateNew(response.data.newPost))
+            unsubscribe(`newPost/likes`);
+            unsubscribe(`newPost/post`);
+            publish({"topic":`newPost/likes`,"payload":JSON.stringify(response.data.newLikes)})
+            publish({"topic":`newPost/post`,"payload":JSON.stringify(response.data.newPost)})
+            subscribe(`newPost/likes`);
+            subscribe(`newPost/post`);
+            
             
 
         }catch(ex) {
@@ -55,5 +68,19 @@ export const editPost = (value) =>{
         }catch(ex) {
             console.log(ex);;
         }
+    }
+}
+
+export const addNewMQTTPost = (post) =>{
+    return async dispatch=>{
+        console.log('new post');
+        dispatch(actions.PostCreateNew(post))
+    }
+}
+
+export const addNewMQTTLikes = (likes) =>{
+    return async dispatch=>{
+        console.log('new post');
+        dispatch(actions.LikesCreate(likes))
     }
 }

@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import { Link } from "react-router-dom";
@@ -6,13 +6,15 @@ import { useCookies } from 'react-cookie';
 import { loginUser } from "../../ducks/users/operations";
 import { getUsersList } from "../../ducks/users/operations";
 import { ErrorMessage, Field, Form, Formik } from "formik"
-import { addNewPost, DeletePost } from "../../ducks/posts/operations";
+import { addNewPost, DeletePost,addNewMQTTPost, addNewMQTTLikes } from "../../ducks/posts/operations";
 import { addNewComment, DeleteComment } from "../../ducks/comments/operations";
 import { getLikesList, LikeMinus, LikePlus } from "../../ducks/likes/operations";
+import {client,connectStatus,mqttConnect,mqttDisconnect,mqttUnSub,mqttSub,mqttPublish} from '../../mqtt/mqtt.js';
 
 
 
-const UserDetail = ({history, user, users, logUSR, posts, loginUser, getUsersList, addNewComment, DeletePost, DeleteComment, getLikesList, LikeMinus, LikePlus, likes,comments},props)=>{
+
+const UserDetail = ({history, user, users, logUSR, posts, loginUser, getUsersList, addNewComment, DeletePost, DeleteComment, getLikesList, LikeMinus, LikePlus, likes,comments, addNewMQTTPost, addNewMQTTLikes},props)=>{
     useEffect(()=>{
         cookies.login && loginUser({
             login: cookies.login,
@@ -23,6 +25,55 @@ const UserDetail = ({history, user, users, logUSR, posts, loginUser, getUsersLis
         
         
     }, [])
+    const [connStatus,setConnStatus] = useState(connectStatus)
+    const record = {topic:"default",qos: 0};
+    const connect = () => {mqttConnect(`ws://broker.emqx.io:8083/mqtt`)};
+    const publish = (payload) => {mqttPublish({...record,...payload})};
+    const subscribe = (topic)=>{mqttSub({...record,"topic":topic})};
+    const unsubscribe = (topic)=>{mqttUnSub({...record,"topic":topic})};
+    const disconnect = () => {mqttDisconnect(); console.log('disco');};
+    useEffect(() => {
+        if (client) {
+          client.on('connect', () => {
+            setConnStatus('Connected');
+          });
+          client.on('error', (err) => {
+            console.error('Connection error: ', err);
+            client.end();
+          });
+          client.on('reconnect', () => {
+            setConnStatus('Reconnecting');
+          });
+          client.on('message', (topic, message) => {
+              switch (topic){
+                    case `poke/${logUSR.login}`:
+                        alert(message.toString());
+                        break;
+                    case 'newPost/likes':
+                        const msg = JSON.parse(message)
+                        addNewMQTTLikes(msg)
+                        break
+                    case 'newPost/post':
+                        const msg2 = JSON.parse(message)
+                        addNewMQTTPost(msg2)
+                        break
+                    default:
+                        break;
+              }
+          });
+        }
+      }, [client]);
+
+    useEffect(()=>{disconnect();connect()},[])
+    useEffect(()=>{
+        if(connStatus==="Connected"){
+            console.log('connected');
+            subscribe(`poke/${logUSR.login}`);
+            subscribe(`newPost/likes`);
+            subscribe(`newPost/post`);
+            }
+        },[connStatus])
+    
     const [cookies, setCookie] = useCookies(['user']);
     const userPosts = []
 
@@ -110,6 +161,7 @@ const UserDetail = ({history, user, users, logUSR, posts, loginUser, getUsersLis
                                     </div>
                             </div>
                             <div className="textField">{c.text}</div>
+                            <img className="photoinpost" src={c.photoUrl}></img>
                             <div className="postResponses">{likes ? likes.find(x=>x.post == c._id).authors.length: 0} 👍</div>
                             <div className="likebuttons">{likes && logUSR ? likes.find(x=>x.post == c._id).authors.find(y=>y == logUSR.login) ?
                             <button onClick={()=>{LikeMinus({
@@ -213,7 +265,7 @@ const mapStateToProps = (state, props) => ({
     posts: state.posts.posts,
     logUSR: state.users.logged,
     comments: state.comments.comments,
-    likes: state.likes.likes
+    likes: state.likes.likes,
     
 });
 const mapDispatchToProps = {
@@ -225,7 +277,9 @@ const mapDispatchToProps = {
     DeletePost,
     getLikesList,
     LikeMinus,
-    LikePlus
+    LikePlus,
+    addNewMQTTPost,
+    addNewMQTTLikes,
 
 }
 

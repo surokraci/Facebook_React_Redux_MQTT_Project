@@ -6,12 +6,14 @@ import { useCookies } from 'react-cookie';
 import { loginUser } from "../../ducks/users/operations";
 import { getUsersList } from "../../ducks/users/operations";
 import { ErrorMessage, Field, Form, Formik } from "formik"
-import { addNewPost, DeletePost } from "../../ducks/posts/operations";
+import { addNewPost, DeletePost, addNewMQTTPost, addNewMQTTLikes } from "../../ducks/posts/operations";
 import { addNewComment, DeleteComment } from "../../ducks/comments/operations";
 import { getLikesList, LikeMinus, LikePlus } from "../../ducks/likes/operations";
+import {client,connectStatus,mqttConnect,mqttDisconnect,mqttUnSub,mqttSub,mqttPublish} from '../../mqtt/mqtt.js';
 
 
-const PostList = ({ history, posts, loading, users, logUSR, loginUser,usersloading, getUsersList, addNewPost, comments, addNewComment, DeleteComment, DeletePost, likes, getLikesList, LikeMinus, LikePlus} ,props) => {
+
+const PostList = ({ history, posts, loading, users, logUSR, loginUser,usersloading, getUsersList, addNewPost, comments, addNewComment, DeleteComment, DeletePost, likes, getLikesList, LikeMinus, LikePlus, addNewMQTTLikes, addNewMQTTPost} ,props) => {
     useEffect(()=>{
         cookies.login && loginUser({
             login: cookies.login,
@@ -21,6 +23,8 @@ const PostList = ({ history, posts, loading, users, logUSR, loginUser,usersloadi
         getUsersList()
         
         
+        
+        
         if(users){
             if(logUSR.login == ''){
                 history.push('/login')
@@ -28,9 +32,69 @@ const PostList = ({ history, posts, loading, users, logUSR, loginUser,usersloadi
         }
     }, [])
 
+    
+
+    
+
+    const [connStatus,setConnStatus] = useState(connectStatus)
+    
+    /*MQTT*/
+
+      useEffect(() => {
+        if (client) {
+          client.on('connect', () => {
+            setConnStatus('Connected');
+          });
+          client.on('error', (err) => {
+            console.error('Connection error: ', err);
+            client.end();
+          });
+          client.on('reconnect', () => {
+            setConnStatus('Reconnecting');
+          });
+          client.on('message', (topic, message) => {
+              switch (topic){
+                    case `poke/${logUSR.login}`:
+                        alert(message.toString());
+                        break;
+                    case 'newPost/likes':
+                        const msg = JSON.parse(message)
+                        addNewMQTTLikes(msg)
+                        break
+                    case 'newPost/post':
+                        const msg2 = JSON.parse(message)
+                        addNewMQTTPost(msg2)
+                        break
+                    default:
+                        break;
+              }
+          });
+        }
+      }, [client]);
+    
+      const record = {topic:"default",qos: 2};
+      const connect = () => {mqttConnect(`ws://broker.emqx.io:8083/mqtt`)};
+      const publish = (payload) => {mqttPublish({...record,...payload})};
+      const subscribe = (topic)=>{mqttSub({...record,"topic":topic});console.log('sub')};
+      const unsubscribe = (topic)=>{mqttUnSub({...record,"topic":topic});console.log('unsub');};
+      const disconnect = () => {mqttDisconnect()};
+    useEffect(()=>{disconnect();connect()},[])
+    useEffect(()=>{
+    if(connStatus==="Connected"){
+        console.log('connected');
+        subscribe(`poke/${logUSR.login}`);
+        subscribe(`newPost/likes`);
+        subscribe(`newPost/post`);
+        }
+    },[connStatus])
+
+
+    /*MQTT*/
+
 
     const handleNewPost = (values, resetForm) => {
         console.log();
+        
         addNewPost(values)
         resetForm({values:''})
         console.log(likes);
@@ -45,6 +109,12 @@ const PostList = ({ history, posts, loading, users, logUSR, loginUser,usersloadi
 
         
     }
+
+    const handlePoke = (login, fn, ln)=>{
+        console.log('poke');
+        publish({"topic":`poke/${login}`,"payload":`You was poked by ${fn} ${ln}`})
+
+    }
     
 
     
@@ -55,6 +125,8 @@ const PostList = ({ history, posts, loading, users, logUSR, loginUser,usersloadi
         setCookie('login', '', { path: '/' })
         setCookie('password', '', { path: '/' })
         loginUser({login:'', password:''});
+        disconnect()
+        unsubscribe(`poke/${logUSR.login}`);
         history.push('/login')
         window.location.reload(false);
         
@@ -66,7 +138,7 @@ const PostList = ({ history, posts, loading, users, logUSR, loginUser,usersloadi
             <h2 className="fbLogoNav"> facebook</h2>
             <div className="navTools">
                 <img src={logUSR.login != '' && users ? users.find(x=>x.login == logUSR.login).profilePicture:''}  alt=''></img>
-                <div className="userNameNav">{logUSR.login != '' && users ? <Link to={`users/${logUSR.login}`}  style={{ textDecoration: 'none', color:'white' }}>{users.find(x=>x.login == logUSR.login).firstName} {users.find(x=>x.login == logUSR.login).lastName}</Link>:<span>x</span>}</div>
+                <div className="userNameNav">{logUSR.login != '' && users ? <Link onClick={()=>disconnect()} to={`users/${logUSR.login}`} style={{ textDecoration: 'none', color:'white' }}>{users.find(x=>x.login == logUSR.login).firstName} {users.find(x=>x.login == logUSR.login).lastName}</Link>:<span>x</span>}</div>
                 <button onClick={() => handleLogout()}>
                     Log Out
                     </button>
@@ -83,6 +155,13 @@ const PostList = ({ history, posts, loading, users, logUSR, loginUser,usersloadi
                             return(
                                 <div key={x.login}>
                                     <Link to={`users/${x.login}`} style={{ textDecoration: 'none', color:'black'}} >{x.firstName} {x.lastName}</Link>
+                                    {logUSR.login !== x.login ? 
+                                    <button onClick={()=>{handlePoke(x.login, users.find(x=>x.login == logUSR.login).firstName, users.find(x=>x.login == logUSR.login).lastName)}}>
+                                    Poke 👉
+                                    </button>:
+                                    <span></span>
+                                    }
+                                    
                                 </div>
                                 
                             )
@@ -140,6 +219,7 @@ const PostList = ({ history, posts, loading, users, logUSR, loginUser,usersloadi
                                     </div>
                             </div>
                             <div className="textField">{c.text}</div>
+                            <img className="photoinpost" src={c.photoUrl}></img>
                             <div className="postResponses">{likes ? likes.find(x=>x.post == c._id).authors.length: 0} 👍</div>
                             <div className="likebuttons">{likes && logUSR ? likes.find(x=>x.post == c._id).authors.find(y=>y == logUSR.login) ?
                             <button onClick={()=>{LikeMinus({
@@ -240,7 +320,9 @@ const mapDispatchToProps = {
     DeletePost,
     getLikesList,
     LikeMinus,
-    LikePlus
+    LikePlus,
+    addNewMQTTLikes,
+    addNewMQTTPost
 }
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(PostList));

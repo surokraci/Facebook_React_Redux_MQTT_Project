@@ -6,7 +6,7 @@ import {
   Route,
   Link
 } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { getPostsList } from './ducks/posts/operations'
 import Postlist from './ui/wall/postlist';
 import { connect } from "react-redux";
@@ -21,6 +21,7 @@ import {getCommentsList} from './ducks/comments/operations'
 import { getLikesList } from './ducks/likes/operations';
 import PostEditForm from './ui/posts/postEdit';
 import ComEditForm from './ui/posts/comEdit';
+import {client,connectStatus,mqttConnect,mqttDisconnect,mqttUnSub,mqttSub,mqttPublish} from './mqtt/mqtt.js';
 
 
 
@@ -42,7 +43,9 @@ function App({getPostsList, getUsersList, loginUser, getCommentsList, getLikesLi
     
     
   });
- 
+  
+  
+
   
   
   return (

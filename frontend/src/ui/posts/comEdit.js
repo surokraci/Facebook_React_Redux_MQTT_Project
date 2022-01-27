@@ -35,7 +35,7 @@ const ComEditForm = ({ history, com, logUSR, editCom,},props) => {
     }
 
     return (
-        <div>
+        <div className="editForm">
             {com ?
             <div>
                 <h3>Edit User Comment</h3>
